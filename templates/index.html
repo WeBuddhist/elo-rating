@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LLM Arena (Elo)</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>LLM Arena</h1>
+      <p class="subtitle">Compare models and update Elo by voting.</p>
+
+      <div class="prompt-box">
+        <textarea id="prompt" placeholder="Enter your prompt..."></textarea>
+        <div class="selectors">
+          <label>
+            Model A
+            <select id="modelA">
+              <option value="">Auto</option>
+            </select>
+          </label>
+          <label>
+            Model B
+            <select id="modelB">
+              <option value="">Auto</option>
+            </select>
+          </label>
+        </div>
+        <button id="compareBtn">Compare</button>
+      </div>
+
+      <div id="compareSection" class="compare hidden">
+        <div class="column">
+          <div class="label">A</div>
+          <pre id="responseA" class="response"></pre>
+          <button id="voteA">Left is better</button>
+        </div>
+        <div class="column">
+          <div class="label">B</div>
+          <pre id="responseB" class="response"></pre>
+          <button id="voteB">Right is better</button>
+        </div>
+      </div>
+
+      <div class="vote-row">
+        <button id="voteTie" class="secondary">It's a tie</button>
+        <button id="voteBothBad" class="danger">Both are bad</button>
+      </div>
+
+      <div class="leaderboard">
+        <h2>Leaderboard</h2>
+        <table>
+          <thead>
+            <tr><th>Model</th><th>Elo</th></tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+  </body>
+  </html>
+
