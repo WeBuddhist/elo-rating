@@ -1,0 +1,7 @@
+model_id,rating,games,wins,losses,ties,win_rate_percent,appearances_total,appearances_left,appearances_right,both_bad
+google:gemini-2.5-flash,1106.80,31,19,6,6,76.0,39,20,19,8
+anthropic:claude-3-5-sonnet-20241022,1026.67,33,14,12,7,53.8,36,16,20,3
+google:gemini-2.5-pro,1021.29,32,17,10,5,63.0,37,22,15,5
+anthropic:claude-3-opus-20240229,1008.16,31,15,14,2,51.7,38,14,24,7
+anthropic:claude-3-5-haiku-20241022,922.23,32,7,17,8,29.2,49,31,18,17
+deepseek-v3:deepseek/deepseek-v3.1,914.86,31,9,22,0,29.0,41,17,24,10

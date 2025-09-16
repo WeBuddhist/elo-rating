@@ -1,82 +1,59 @@
+# Elo/BT Library
 
-## Quick start
+This repository provides small, reusable tools to compute rankings from pairwise votes:
+
+- Elo rating system (`lib/elo`) with a CLI to process a votes CSV
+- Bradley–Terry model (`lib/bt`) with a CLI to fit BT and convert to Elo scale
+
+No UI/server is included.
+
+## Requirements
+- Python 3.10+
+
+## Install (optional)
 ```bash
-# From project root
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-
-# Create .env in the project root (no quotes)
-# ANTHROPIC_API_KEY=sk-ant-...
-# GOOGLE_API_KEY=AIza...
-
-# Run the server (change port if needed)
-PORT=5052 python backend/app.py
-# Open http://localhost:5052
+pip install -r requirements.txt  # currently no external deps
 ```
 
-## Usage
-1) Enter a prompt. Optionally choose Model A and Model B; otherwise keep Auto.
-2) Click Compare. Outputs stream into left and right panes.
-3) Vote: Left is better, Right is better, It's a tie, or Both are bad.
-4) Elo updates and the leaderboard refreshes.
+## CLI tools
 
-## Models included
-- Claude: `claude-3-5-sonnet-20240620`, `claude-3-7-sonnet-latest`
-- Gemini: `gemini-1.5-pro`, `gemini-2.5-flash`
+### Elo processing
+```bash
+python scripts/process_votes.py --csv "15th sept new.csv" --outdir analysis
+```
+Outputs:
+- `analysis/elo_rankings.json` (integer ratings)
+- `analysis/model_stats.csv` (rating, games, wins, losses, ties, appearances, both_bad, win_rate)
 
-Notes:
-- Gemini 2.5 models use a thinking budget of 0 by default (fast, non-deliberative).
-- Add new models in `backend/llm_handler.py` under `self.available_models` and ensure the `generate`/`stream_generate` logic knows how to call them.
+### Bradley–Terry fitting
+```bash
+python scripts/fit_bt.py --csv "15th sept new.csv" --outdir analysis --tie half
+```
+Outputs:
+- `analysis/bt_ratings.json` (integer BT-based Elo)
+- `analysis/bt_model_stats.csv`
 
-## API
-- `GET /api/models`
-  - Returns available models with provider and current rating.
-- `GET /api/rankings`
-  - Returns all models sorted by Elo.
-- `POST /api/compare`
-  - Body: `{ prompt: string, model_a?: string, model_b?: string }`
-  - Returns one-shot outputs: `{ a: {text}, b: {text}, a_model, b_model }`.
-- `POST /api/compare/stream` (NDJSON)
-  - Body: `{ prompt: string, model_a?: string, model_b?: string }`
-  - Events: `{type: "meta"|"start"|"delta"|"end", side?: "a"|"b", text?: "..."}`
-- `POST /api/vote`
-  - Body: `{ outcome: "left"|"right"|"tie"|"both_bad", winner_id, loser_id }`
-  - Tie applies 0.5 score to both. Both-bad leaves ratings unchanged.
-
-## Elo details
-- Default K-factor: 32
-- Rating width: 400 (logistic curve)
-- Updates:
-  - Win/loss: `update_ratings(winner, loser)`
-  - Generic: `apply_result(rating_a, rating_b, score_a)` where `score_a ∈ {1, 0.5, 0}`
-
-## Reusable Elo library
-- Location: `lib/elo`
-  - `core.py`: `calculate_expected_score`, `apply_result`, `update_ratings`
-  - `system.py`: `EloRatingSystem` (high-level interface)
-  - `storage.py`: `JsonStore` (optional JSON persistence)
-- Example:
+## Library usage
 ```python
 from lib.elo import EloRatingSystem
 
 elo = EloRatingSystem(initial_rating=1000, k_factor=32)
-elo.update_outcome("claude-3-7-sonnet-latest", "gemini-2.5-flash", outcome="left")
-elo.update_outcome("gemini-1.5-pro", "claude-3-5-haiku-20241022", outcome="tie")
+elo.update_outcome("model_left", "model_right", outcome="left")
+elo.update_outcome("a", "b", outcome="tie")
 print(elo.rankings())
 ```
 
-## Configuration
-- Change default K or rating width by instantiating `EloRatingSystem` with custom values.
-- Server port: set `PORT` env var (defaults to 5000 if not set).
-- Ratings are stored in `backend/models.json`. Delete this file to reset.
+```python
+from pathlib import Path
+from lib.bt import process_csv_to_bt, fit_bt_mm, convert_bt_to_elo
 
-## Troubleshooting
-- 401 invalid `x-api-key` (Claude): verify `ANTHROPIC_API_KEY` in `.env` and restart server.
-- 400 API key expired (Gemini): regenerate `GOOGLE_API_KEY` in Google AI Studio.
-- httpx `proxies` TypeError: we pin `httpx<0.28` in `requirements.txt` for Anthropic SDK compatibility.
-- Port in use: set a different `PORT` or stop the occupying service.
+wins, totals = process_csv_to_bt(Path("15th sept new.csv"), tie_mode="half")
+p = fit_bt_mm(wins, totals)
+elos = convert_bt_to_elo(p)
+```
 
 ## Notes
-- The UI hides model identities during comparison to reduce bias.
-- You can schedule pairings externally for round-robin or coverage-aware tournaments.
+- In the CSV, `is_tie == "2"` means both responses are bad (ignored for ratings).
+- Ties are supported (Elo uses 0.5; BT uses 0.5/0.5 by default). For full Davidson tie modeling, extend `lib/bt`.

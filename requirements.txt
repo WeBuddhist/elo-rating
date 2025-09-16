@@ -1,7 +1,1 @@
-Flask==3.0.3
-flask-cors==4.0.1
-anthropic==0.34.2
-google-generativeai==0.7.2
-python-dotenv==1.0.1
-httpx<0.28
 

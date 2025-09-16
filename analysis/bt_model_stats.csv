@@ -1,0 +1,7 @@
+model_id,elo_bt,games,wins,losses,ties,win_rate_percent
+google:gemini-2.5-flash,1121,31,13,0,9,100
+google:gemini-2.5-pro,1067,32,9,2,10,82
+anthropic:claude-3-5-sonnet-20241022,1013,33,4,2,14,67
+anthropic:claude-3-opus-20240229,1012,31,7,6,9,54
+anthropic:claude-3-5-haiku-20241022,913,32,3,13,8,19
+deepseek-v3:deepseek/deepseek-v3.1,873,31,1,14,8,7

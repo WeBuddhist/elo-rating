@@ -1,0 +1,26 @@
+[
+  {
+    "id": "google:gemini-2.5-flash",
+    "rating": 1106.799980605562
+  },
+  {
+    "id": "anthropic:claude-3-5-sonnet-20241022",
+    "rating": 1026.6663639286444
+  },
+  {
+    "id": "google:gemini-2.5-pro",
+    "rating": 1021.2921242744761
+  },
+  {
+    "id": "anthropic:claude-3-opus-20240229",
+    "rating": 1008.1587127282518
+  },
+  {
+    "id": "anthropic:claude-3-5-haiku-20241022",
+    "rating": 922.2273041877369
+  },
+  {
+    "id": "deepseek-v3:deepseek/deepseek-v3.1",
+    "rating": 914.8555142753286
+  }
+]

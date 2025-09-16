@@ -1,0 +1,26 @@
+[
+  {
+    "id": "google:gemini-2.5-flash",
+    "elo_bt": 1121
+  },
+  {
+    "id": "google:gemini-2.5-pro",
+    "elo_bt": 1067
+  },
+  {
+    "id": "anthropic:claude-3-5-sonnet-20241022",
+    "elo_bt": 1013
+  },
+  {
+    "id": "anthropic:claude-3-opus-20240229",
+    "elo_bt": 1012
+  },
+  {
+    "id": "anthropic:claude-3-5-haiku-20241022",
+    "elo_bt": 913
+  },
+  {
+    "id": "deepseek-v3:deepseek/deepseek-v3.1",
+    "elo_bt": 873
+  }
+]
